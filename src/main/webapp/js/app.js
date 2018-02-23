@@ -18,7 +18,7 @@ toastr.options = {
 
 function FormBuilder() {
 
-    this.buildFormInput = function(inputData){
+    this.buildFormInput = function(inputData, formData){
         var self = this;
         console.log(inputData);
 
@@ -36,16 +36,14 @@ function FormBuilder() {
         var type = self.resolveInputType(inputData);
         if(type != "select"){
             $input = $("<input>");
+            $input.attr("id", inputData.id);
+            $input.attr("class", "form-control");
+            $input.prop("required", inputData.required);
+            $input.prop("hidden", !inputData.readable);
+            $input.prop("disabled", !inputData.writable);
         }else{
-            $input = $("<select>")
+            $input = self.buildSelectInput(inputData, formData);
         }
-
-        $input.attr("id", inputData.id);
-        $input.attr("class", "form-control");
-        $input.prop("required", inputData.required);
-        $input.prop("hidden", !inputData.readable);
-        $input.prop("disabled", !inputData.writable);
-
 
         $inputDiv.append($input);
         $formGroup.append($label);
@@ -64,6 +62,26 @@ function FormBuilder() {
         }else if(typeName == "enum"){
             type = "select";
         }
+        return type;
+    }
+    
+    this.buildSelectInput = function(inputData, formData){
+    	var $selectInput = $("<select>");
+    	$selectInput.attr("class", "form-control");
+    	if(inputData.writable){
+    		$selectInput.attr("name", inputData.id);
+    	}else {
+    		$selectInput.prop("disabled", true);
+    	}
+    	var enumMap = formData.enumMap;
+    	Object.keys(enumMap).forEach(key => {
+    		var $option = $("<option>");
+    		$option.attr("value", key);
+    		$option.text(enumMap[key]);
+    		$selectInput.append($option);
+    	});
+    	
+    	return $selectInput;
     }
 
     this.buildFormButton = function(type, id, value){

@@ -17,12 +17,12 @@ $(document).on("click", "#registerBtn", function () {
 
                 for(i=0; i<formDTO.formProperties.length; i++){
                     var formProperty = formDTO.formProperties[i];
-                    var $content = formBuilder.buildFormInput(formProperty);
+                    var $content = formBuilder.buildFormInput(formProperty, formDTO);
                     console.log($content);
                     $registerForm.append($content);
                 }
 
-                var $button = formBuilder.buildFormButton("success", "registerConfirmBtn", "Submit");
+                var $button = formBuilder.buildFormButton("success", "registerConfirmBtn", "Potvrdi");
                 $registerForm.append($button);
             }else {
                 toastr.info(formDTO.message);

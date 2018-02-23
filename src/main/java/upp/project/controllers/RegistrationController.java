@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import upp.project.model.dto.FormDTO;
 
 import javax.transaction.Transactional;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/registration")
@@ -40,21 +43,22 @@ public class RegistrationController {
 	@Transactional
 	@GetMapping(value="/start")
 	public ResponseEntity newInstance(){
-		ProcessDefinition procDef = repositoryService.createProcessDefinitionQuery().processDefinitionKey("myProcess").latestVersion().singleResult();
+		ProcessDefinition procDef = repositoryService.createProcessDefinitionQuery().processDefinitionKey("registracija").latestVersion().singleResult();
 		StartFormData formData = formService.getStartFormData(procDef.getId());
 		List<FormProperty> formProperties = formData.getFormProperties();
 
 		FormDTO formDTO = new FormDTO();
 		formDTO.setFormKey(formData.getFormKey());
-
-		if (formProperties.size() == 0){
-			runtimeService.startProcessInstanceByKey("myProcess");
-			String message = "Nova instanca procesa je uspesno pokrenuta. Nema forme na startu.";
-			formDTO.setMessage(message);
-		}else{
-			formDTO.setFormProperties(formProperties);
-			formDTO.setMessage("Forma na startu.");
+		
+		formDTO.setFormProperties(formProperties);
+		for(FormProperty formProperty : formProperties){
+			if(formProperty.getType().getName().equals("enum")){
+				LinkedHashMap<String, String> information = (LinkedHashMap<String, String>) formProperty.getType().getInformation("values");
+				formDTO.setEnumMap(information);
+			}
 		}
+		formDTO.setMessage("Forma na startu.");
+		
 
 		return new ResponseEntity(formDTO, HttpStatus.OK);
 	}

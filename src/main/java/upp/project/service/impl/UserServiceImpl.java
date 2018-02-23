@@ -26,4 +26,22 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(user);
 	}
 
+	@Override
+	public void notifyUserWrongRegistrationData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public UserDTO activate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deactivate() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
