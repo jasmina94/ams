@@ -4,8 +4,7 @@ lastName: Petrovic
 email: pera@something.com
 password: pera
 groups:
- - id: bankar
- - id: manager
+ - id: pravno
 ---
 id: zika
 firstName: Zika
@@ -13,4 +12,4 @@ lastName: Zikic
 email: zika@something.com
 password: zika
 groups:
- - id: bankar
+ - id: fizicko

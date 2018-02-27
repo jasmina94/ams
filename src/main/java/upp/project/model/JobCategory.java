@@ -21,6 +21,6 @@ public class JobCategory {
     @Column
     private String name;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "jobCategory", cascade = CascadeType.ALL)
     private List<Company> companies;
 }

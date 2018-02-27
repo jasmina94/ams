@@ -3,6 +3,7 @@
  */
 
 var validator = new ToastrValidator();
+var loggedInUser = null;
 
 $(document).on("click", "#loginBtn", function(e) {
     if(!validator.validateLoginForm()){
@@ -10,8 +11,8 @@ $(document).on("click", "#loginBtn", function(e) {
     }
     e.preventDefault();
     var newUser = new Object();
-    newUser["username"] = $("#username").val();
-    newUser["password"] = $("#password").val();
+    newUser["username"] = $("#logusername").val();
+    newUser["password"] = $("#logpassword").val();
     loginUser(newUser);
 });
 
@@ -23,7 +24,7 @@ function loginUser(user) {
         contentType : 'application/x-www-form-urlencoded',
         data : strUser,
         success : function() {
-            setUser();
+            getUser();
         },
         error : function(xhr, textStatus, errorThrown) {
             toastr.error('Error!  Status = ' + xhr.status);
@@ -31,13 +32,22 @@ function loginUser(user) {
     });
 }
 
-function setUser() {
+function getUser() {
     $.ajax({
         url : '/api/users/me',
         type : 'GET',
+        async: 'false',
         success : function(userDTO) {
-            console.log(userDTO)
-            //redirektuj se na home page sa parametrima tog usera
+            if(userDTO != null){
+            	var name = userDTO.firstname + " " + userDTO.lastname;
+            	$(".mainNavbar").show();
+            	$("#loginDiv").hide();
+            	$("#mainDiv").show();
+            	$("#userLabel").text(name);
+            	loggedInUser = userDTO;
+            }else {
+            	loggedInUser = null;
+            }
         },
         error : function(xhr, textStatus, errorThrown) {
             toastr.error('Error authenitication user!  Status = ' + xhr.status);
@@ -45,6 +55,39 @@ function setUser() {
     })
 }
 
+$(document).on("click", "#logoutBtn", function(){
+	 if(loggedInUser != null) {
+		 var name = loggedInUser.firstname + " " + loggedInUser.lastname; 
+		 $.ajax({
+			url: '/api/logout',
+			type : 'POST',
+		    data: loggedInUser.username,
+		    success: function(data){
+		    	console.log("izlogovan");
+		    	setLoggedOutView();
+		    },
+		    error: function(data){
+		    	console.log("pogresno");
+		    	setLoggedInView(name);
+		    }
+		 });
+	 }
+});
+
+function setLoggedInView(){
+	$(".mainNavbar").show();
+	$("#loginDiv").hide();
+	$("#mainDiv").show();
+	$("#userLabel").text(name);
+}
+
+function setLoggedOutView(){
+	$(".mainNavbar").hide();
+	$("#loginDiv").show();
+	$("#loginForm").find("input").val("");
+	$("#mainDiv").hide();
+	$("#userLabel").text("");
+}
 function format(obj) {
     var str = [];
     for (var p in obj)

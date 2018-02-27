@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +35,9 @@ public class Company {
     @Column
     private double maxDistance;
 
-    @ManyToMany(mappedBy = "companies", cascade = CascadeType.ALL)
-    private List<JobCategory> jobCategories;
+    @ManyToOne
+    private JobCategory jobCategory;
+    
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    private List<CustomUser> agents = new ArrayList<>();
 }

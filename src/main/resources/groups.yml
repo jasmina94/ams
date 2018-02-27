@@ -1,7 +1,7 @@
-id: bankar
-name: Bankar
+id: pravno
+name: Pravno lice
 type: assignment
 ---
-id: manager
-name: Manager
+id: fizicko
+name: Fizicko lice
 type: assignment

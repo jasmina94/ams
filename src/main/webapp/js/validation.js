@@ -3,7 +3,6 @@
  */
 
 function ToastrValidator() {
-
     this.checkFieldEmpty = function (field){
         if(field.val() == ""){
             field.focus();

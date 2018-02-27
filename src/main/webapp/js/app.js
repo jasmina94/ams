@@ -16,6 +16,45 @@ toastr.options = {
     "hideMethod" : "fadeOut"
 }
 
+
+$(document).ready(function(){
+	var $navbar = $(".mainNavbar");
+	var $loginDiv = $(".loginDiv");
+	var $mainDiv = $(".mainDiv");
+	
+	checkIfLoged();
+});
+
+function checkIfLoged(){
+	$.ajax({
+        url : '/api/users/me',
+        type : 'GET',
+        async: 'false',
+        success : function(userDTO) {
+            if(userDTO != null){
+            	var $navbar = $(".mainNavbar").show();
+            	var $loginDiv = $("#loginDiv").hide();
+            	var $mainDiv = $("#mainDiv").show();
+            }else {
+            	var $navbar = $(".mainNavbar").hide();
+            	var $loginDiv = $("#loginDiv").show();
+            	$("#loginForm").find("input").val("");
+            	var $mainDiv = $("#mainDiv").hide();
+            }
+        },
+        error : function(xhr, textStatus, errorThrown) {
+        	if(xhr.status == 401){
+        		var $navbar = $(".mainNavbar").hide();
+            	var $loginDiv = $("#loginDiv").show();
+            	var $mainDiv = $("#mainDiv").hide();
+        	}else {
+        		toastr.error('Error authenitication user!  Status = ' + xhr.status);
+        	}
+        	
+        }
+    })
+}
+
 function FormBuilder() {
 
     this.buildFormInput = function(inputData, formData){
@@ -55,8 +94,13 @@ function FormBuilder() {
     this.resolveInputType = function (input) {
         var type = ""
         var typeName = input.type.name;
-        if(type.name == "string" || type.name == "long"){
-            type = "text";
+        var inputName = input.id;
+        if(typeName == "string" || typeName == "long"){
+        	if(inputName == "kategorija"){
+        		type = "select";
+        	}else{
+        		type = "text";
+        	}            
         }else if(typeName == "boolean"){
             type = "checkbox";
         }else if(typeName == "enum"){
@@ -70,6 +114,7 @@ function FormBuilder() {
     	$selectInput.attr("class", "form-control");
     	if(inputData.writable){
     		$selectInput.attr("name", inputData.id);
+    		$selectInput.attr("id", inputData.id);
     	}else {
     		$selectInput.prop("disabled", true);
     	}

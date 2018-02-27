@@ -6,16 +6,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import upp.project.model.Company;
+import upp.project.model.CustomUser;
+import upp.project.model.JobCategory;
+import upp.project.model.Location;
 import upp.project.model.dto.UserDTO;
+import upp.project.repository.CompanyRepo;
+import upp.project.repository.CustomUserRepo;
+import upp.project.repository.JobCategoryRepo;
+import upp.project.repository.LocationRepo;
 import upp.project.service.UserService;
 
 import java.util.List;
 
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private IdentityService identityService;
+	
+	@Autowired
+	private CustomUserRepo customUserRepo;
+	
+	@Autowired
+	private LocationRepo locationRepo;
+	
+	@Autowired
+	private JobCategoryRepo jobCategoryRepo;
+	
+	@Autowired
+	private CompanyRepo companyRepo;
 	
 	@Override
 	public UserDTO read() {
@@ -28,20 +49,120 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void notifyUserWrongRegistrationData() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Obavestavam o losem mailu ili korisnickom imenu.");
 	}
 
 	@Override
-	public UserDTO activate() {
-		// TODO Auto-generated method stub
-		return null;
+	public void activate(String username) {
+		System.out.println("Aktiviram korisnika sa username-om: " + username);
+		CustomUser custom = customUserRepo.findByUsername(username);
+		if(custom != null){
+			User newUser = identityService.newUser(username);
+			newUser.setEmail(custom.getEmail());
+			newUser.setFirstName(custom.getFirstname());
+			newUser.setLastName(custom.getLastname());
+			newUser.setPassword(custom.getPassword());
+			identityService.saveUser(newUser);
+			custom.setActive(true);
+			customUserRepo.save(custom);
+			
+			if(custom.getTip().equals(CustomUser.Type.PRAVNO)){
+				identityService.createMembership(username, "pravno");
+			}else {
+				identityService.createMembership(username, "fizicko");
+			}
+		}
+		System.out.println("Kraj aktivan je");
 	}
 
 	@Override
-	public void deactivate() {
-		// TODO Auto-generated method stub
+	public void deactivate(String username) {
+		System.out.println("Deaktivacija. Brisanje mockup-a iz baze: " + username);
+		CustomUser custom = customUserRepo.findByUsername(username);
+		if(custom != null){
+			customUserRepo.delete(custom);
+		}
+		Location location = locationRepo.findByUser(username);
+		if(location != null){
+			locationRepo.delete(location);
+		}
+		System.out.println("Kraj nije aktivan");
+	}
+
+	@Override
+	public boolean check(String email, String username, String adresa, String mesto, String ptt, String password, String ime, String prezime, String tip, String naziv, String kategorija, String udaljenost) {
+		boolean valid = true;
+		List<User> users = identityService.createUserQuery().list();
+		for(User u : users){
+			if(u.getEmail().equals(email) || u.getId().equals(username)){
+				valid = false;
+				break;
+			}
+		}
 		
+		//Ako je sve okej sacuvaj podatke koje imas u bazi za CustomUser-a
+		if(valid){
+			CustomUser custom = new CustomUser();
+			custom.setActive(false);
+			custom.setEmail(email);
+			custom.setUsername(username);
+			custom.setPassword(password);
+			custom.setAdresa(adresa);
+			custom.setMesto(mesto);
+			custom.setPtt(ptt);
+			custom.setPassword(password);
+			custom.setFirstname(ime);
+			custom.setLastname(prezime);
+			
+			if(tip.equals("fizicko")){
+				custom.setTip(CustomUser.Type.FIZICKO);
+				custom = customUserRepo.save(custom);
+			}else {
+				custom.setTip(CustomUser.Type.PRAVNO);
+				custom = customUserRepo.save(custom);
+				
+				Company postojeca = companyRepo.findByName(naziv);
+				if(postojeca != null){
+					System.out.println("Dodaje novog agenta u postojecu firmu.");
+					postojeca.getAgents().add(custom);
+					postojeca = companyRepo.save(postojeca);
+					custom.setCompany(postojeca);
+					custom = customUserRepo.save(custom);
+				}else {
+					System.out.println("Dodaje novu firmu i u nju novog agenta.");
+					Company company = new Company();
+					company.setName(naziv);
+					company.setAddress(adresa);
+					company.setMaxDistance(Double.parseDouble(udaljenost));
+					company.setPlace(mesto);
+					company.setPostalCode(ptt);
+					JobCategory jobCategory = jobCategoryRepo.findByName(kategorija);
+					if(jobCategory != null){
+						company.setJobCategory(jobCategory);
+					}
+					company.getAgents().add(custom);
+					company = companyRepo.save(company);
+					custom.setCompany(company);
+					custom = customUserRepo.save(custom);
+				}
+			}
+		}
+		
+		return valid;
+	}
+	
+	
+	//Da li vec postoji firma sa tim nazivom-ako postoji true
+	private boolean checkCompany(String name){
+		boolean exists = false;
+		List<Company> companies = companyRepo.findAll();
+		for(Company c : companies){
+			if(c.getName().equals(name)){
+				exists = true;
+				break;
+			}
+		}
+		return exists;
 	}
 
 }

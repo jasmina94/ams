@@ -20,7 +20,7 @@ public class CompanyDTO {
     private String postalCode;
     private String place;
     private double maxDistance;
-    private List<JobCategoryDTO> jobCategories;
+    private JobCategoryDTO jobCategory;
 
     public CompanyDTO(Company company){
         this(company, true);
@@ -34,7 +34,7 @@ public class CompanyDTO {
         this.place = company.getPlace();
         this.maxDistance = company.getMaxDistance();
         if(cascade){
-            this.jobCategories = company.getJobCategories().stream().map(jobCategory -> new JobCategoryDTO(jobCategory, false)).collect(Collectors.toList());
+            this.jobCategory = new JobCategoryDTO(company.getJobCategory(), false);
         }
     }
 }
