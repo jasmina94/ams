@@ -5,9 +5,7 @@ import upp.project.model.dto.UserDTO;
 public interface UserService {
 
 	UserDTO read();
-	
-	void notifyUserWrongRegistrationData();
-	
+		
 	void activate(String username);
 	
 	void deactivate(String username);

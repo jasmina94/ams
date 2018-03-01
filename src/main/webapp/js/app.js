@@ -16,11 +16,14 @@ toastr.options = {
     "hideMethod" : "fadeOut"
 }
 
+var globalAuthenticator = null;
+var globalFormBuilder = null;
+var globalValidator = null;
 
 $(document).ready(function(){
-	var $navbar = $(".mainNavbar");
-	var $loginDiv = $(".loginDiv");
-	var $mainDiv = $(".mainDiv");
+	globalValidator = new ToastrValidator();
+	globalFormBuilder = new FormBuilder();
+	globalAuthenticator = new Authenticator();
 	
 	checkIfLoged();
 });
@@ -32,9 +35,12 @@ function checkIfLoged(){
         async: 'false',
         success : function(userDTO) {
             if(userDTO != null){
+            	globalAuthenticator.loggedInUser = userDTO;
+            	var name = userDTO.firstname + " " + userDTO.lastname;
             	var $navbar = $(".mainNavbar").show();
             	var $loginDiv = $("#loginDiv").hide();
             	var $mainDiv = $("#mainDiv").show();
+            	$("#userLabel").text(name);
             }else {
             	var $navbar = $(".mainNavbar").hide();
             	var $loginDiv = $("#loginDiv").show();
@@ -96,7 +102,7 @@ function FormBuilder() {
         var typeName = input.type.name;
         var inputName = input.id;
         if(typeName == "string" || typeName == "long"){
-        	if(inputName == "kategorija"){
+        	if(inputName == "kategorija" || inputName == "kategorijaPosla"){
         		type = "select";
         	}else{
         		type = "text";
@@ -142,6 +148,104 @@ function FormBuilder() {
 
         return $formGroup;
     }
+}
+
+function Authenticator(){
+	
+	this.loggedInUser = null;
+	
+	this.login = function(user){
+		var self = this;
+		var strUser = self.format(user);
+		$.ajax({
+	        url : '/api/users/login',
+	        type : 'POST',
+	        contentType : 'application/x-www-form-urlencoded',
+	        data : strUser,
+	        success : function() {
+	            self.checkUser();
+	        },
+	        error : function(xhr, textStatus, errorThrown) {
+	        	if(xhr.status == 401){
+	        		toastr.error("Nema korisnika sa unesenim kredencijalima. Pokušajte ponovo");
+	        	}else{
+	        		toastr.error('Error!  Status = ' + xhr.status);
+	        	}
+	        }
+	    });
+	},
+	
+	this.checkUser = function(){
+		var self = this;
+		$.ajax({
+	       url : '/api/users/me',
+	       type : 'GET',
+	       async: 'false',
+	       success : function(userDTO) {
+	    	   if(userDTO != null){
+	    		   var name = userDTO.firstname + " " + userDTO.lastname;
+	               self.setLoggedInView(name);
+	               self.loggedInUser = userDTO;
+	           }else {
+	        	   self.setLoggedOutView();
+	        	   self.loggedInUser = null;
+	           }
+	        },
+	        error : function(xhr, textStatus, errorThrown) {
+	            toastr.error('Error authenitication user!  Status = ' + xhr.status);
+	        }
+	    });
+	},
+	
+	this.logout = function(){
+		var self = this;
+		if(self.loggedInUser != null){
+			var name = self.loggedInUser.firstname + " " + self.loggedInUser.lastname;
+			var username = self.loggedInUser.username;
+			 $.ajax({
+				url: '/api/logout',
+				type : 'POST',
+			    data: username,
+			    success: function(data){
+			    	console.log("izlogovan uspesno");
+			    	self.setLoggedOutView();
+			    },
+			    error: function(data){
+			    	console.log("nije izlogovan");
+			    	self.setLoggedInView(name);
+			    }
+			 });
+		}else {
+			console.log("No one is logged in.");
+		}
+	},
+	
+	this.format = function(obj){
+		var str = [];
+	    for (var p in obj)
+	        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    	return str.join("&");
+	},
+	
+	this.getLoggedInUser = function(){
+		var self = this;
+		return self.loggedInUser;
+	},
+	
+	this.setLoggedInView = function(name){
+		$(".mainNavbar").show();
+		$("#loginDiv").hide();
+		$("#mainDiv").show();
+		$("#userLabel").text(name);
+	}
+
+	this.setLoggedOutView = function(){
+		$(".mainNavbar").hide();
+		$("#loginDiv").show();
+		$("#loginForm").find("input").val("");
+		$("#mainDiv").hide();
+		$("#userLabel").text("");
+	}
 }
 
 

@@ -1,6 +1,8 @@
 package upp.project.model;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +20,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class CustomUser {
+public class CustomUser{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5922828365260003590L;
 
 	public enum Type {
         PRAVNO,
@@ -59,6 +66,12 @@ public class CustomUser {
 	@Column
 	private boolean isActive;
 	
+	@Column
+	private double maxDistance;
+	
+	@Column
+	private String name;
+	
 	@ManyToOne
-	private Company company; //ovo polje ako je agent
+	private JobCategory jobCategory;
 }

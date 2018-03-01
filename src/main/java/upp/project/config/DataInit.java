@@ -29,8 +29,8 @@ public class DataInit implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent arg0) {
-		//initGroupsYml();
-		//initUsersYml();
+		initGroupsYml();
+		initUsersYml();
 		System.out.println("Users and groups initialized!");
 	}
 	

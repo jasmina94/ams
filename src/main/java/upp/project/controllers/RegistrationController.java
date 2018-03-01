@@ -14,14 +14,11 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import upp.project.model.dto.FormDTO;
 import upp.project.model.dto.TaskDTO;
@@ -57,7 +54,6 @@ public class RegistrationController {
 	
 	private static final Gson gson = new Gson();
 	
-	//Start
 	@Transactional
 	@GetMapping(value="/start")
 	public ResponseEntity<FormDTO> newInstance(HttpServletRequest request){
@@ -67,7 +63,6 @@ public class RegistrationController {
 		FormDTO formDTO = new FormDTO();
 		
 		if(formProperties.size() == 0){
-			//Postavljanje izvrsioca taskova koji slede
 			HashMap<String, Object> variables = new HashMap<>();
 			variables.put("korisnik", request.getServerName());
 			runtimeService.startProcessInstanceByKey("registracija", variables);
@@ -157,8 +152,10 @@ public class RegistrationController {
 			variables.put("udaljenost", "");
 			runtimeService.setVariables(task.getProcessInstanceId(), variables);
 		}
-		 
-		if(canExecute(taskId, userId) && valid){
+		
+		boolean canExec = canExecute(taskId, userId);
+		
+		if(canExec && valid){
 			formService.submitTaskFormData(taskId, params);
 			formDTO.setMessage(Messages.SUCCESSFUL_TASK);
 			System.out.println("ok");
@@ -184,7 +181,6 @@ public class RegistrationController {
 			response.sendRedirect("/timeout.html");
 		}	
 	}
-	
 	
 	private boolean canExecute(String taskId, String userId){
 		for (Task t : taskService.createTaskQuery().taskAssignee(userId).list())

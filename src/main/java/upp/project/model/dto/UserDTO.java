@@ -2,12 +2,20 @@ package upp.project.model.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
 import org.activiti.engine.identity.User;
 
 @Data
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6796588639410594561L;
+	
 	private String username;
 	private String password;
 	private String email;

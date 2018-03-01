@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <title>UPP</title>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+    <link rel="stylesheet" href="css/jquery-ui.css" />
+	<link rel="stylesheet" href="css/jquery-ui.structure.css" />
+	<link rel="stylesheet" href="css/jquery-ui.theme.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/toastr.css" />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+	<script type="text/javascript" src="lib/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="lib/bootstrap.js"></script>
+	<script type="text/javascript" src="lib/toastr.js"></script>
+	<script type="text/javascript" src="lib/jquery-ui.js"></script>
+	
     <!--Custom style-->
     <link rel="stylesheet" href="style/style.css">
 
@@ -20,6 +23,7 @@
     <script src="js/validation.js"></script>
     <script src="js/login.js"></script>
     <script src="js/registration.js"></script>
+    <script src="js/auction.js"></script>
 
 </head>
 <body>
@@ -88,8 +92,20 @@
 
 
 <div id="mainDiv">
-    <p><a href="#">Podnesite zahtev</a></p>
-    <p><a href="#">Proverite zadatke koji su vam dodeljeni</a></p>
+    <p><a href="#" id="pokreniAukcije">Podnesite zahtev</a></p>
+    <p><a href="#" id="getZadaciLogovani">Proverite zadatke koji su vam dodeljeni</a></p>
+    
+    <div id="divZahtevAukcija" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Podnesite zahtev za nabavku robe ili usluge</b></h5>
+    	<form id="formaZahtevAukcija" class="form-horizontal">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaManjiBr" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Ne postoji dovoljan broj firmi u sistemu za vaš zahtev.</b></h5>
+    	<form id="formaOdlukaManjiBr" class="form-horizontal">
+    	</form>
+    </div>
 </div>
 
 

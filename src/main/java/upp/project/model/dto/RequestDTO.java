@@ -1,5 +1,6 @@
 package upp.project.model.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,20 +10,25 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class RequestDTO {
+public class RequestDTO implements Serializable {
 
-	private String kategorija;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5584126555450708852L;
+
+	private String kategorijaPosla;
 	
 	private String opis;
 	
 	private double procenjenaVrednost;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date rokPrijema;
+	private Date rokZaPonude;
 	
-	private int minBrojPonuda;
+	private int minPonuda;
 	
-	private int maxBrojPonuda;
+	private int maxPonuda;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date rokIzvrsenja;

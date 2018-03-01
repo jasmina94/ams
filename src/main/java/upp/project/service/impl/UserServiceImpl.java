@@ -7,12 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import upp.project.model.Company;
 import upp.project.model.CustomUser;
 import upp.project.model.JobCategory;
 import upp.project.model.Location;
 import upp.project.model.dto.UserDTO;
-import upp.project.repository.CompanyRepo;
 import upp.project.repository.CustomUserRepo;
 import upp.project.repository.JobCategoryRepo;
 import upp.project.repository.LocationRepo;
@@ -35,8 +33,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private JobCategoryRepo jobCategoryRepo;
 	
-	@Autowired
-	private CompanyRepo companyRepo;
 	
 	@Override
 	public UserDTO read() {
@@ -45,11 +41,6 @@ public class UserServiceImpl implements UserService {
 		List<User> users = identityService.createUserQuery().userId(username).list();
 		User user = users.get(0);
         return new UserDTO(user);
-	}
-
-	@Override
-	public void notifyUserWrongRegistrationData() {
-		System.out.println("Obavestavam o losem mailu ili korisnickom imenu.");
 	}
 
 	@Override
@@ -115,54 +106,27 @@ public class UserServiceImpl implements UserService {
 			custom.setLastname(prezime);
 			
 			if(tip.equals("fizicko")){
-				custom.setTip(CustomUser.Type.FIZICKO);
+				System.out.println("Novo fizicko lice");
+				custom.setTip(CustomUser.Type.FIZICKO);				
 				custom = customUserRepo.save(custom);
 			}else {
+				System.out.println("Novo pravno lice");
 				custom.setTip(CustomUser.Type.PRAVNO);
-				custom = customUserRepo.save(custom);
-				
-				Company postojeca = companyRepo.findByName(naziv);
-				if(postojeca != null){
-					System.out.println("Dodaje novog agenta u postojecu firmu.");
-					postojeca.getAgents().add(custom);
-					postojeca = companyRepo.save(postojeca);
-					custom.setCompany(postojeca);
-					custom = customUserRepo.save(custom);
-				}else {
-					System.out.println("Dodaje novu firmu i u nju novog agenta.");
-					Company company = new Company();
-					company.setName(naziv);
-					company.setAddress(adresa);
-					company.setMaxDistance(Double.parseDouble(udaljenost));
-					company.setPlace(mesto);
-					company.setPostalCode(ptt);
-					JobCategory jobCategory = jobCategoryRepo.findByName(kategorija);
-					if(jobCategory != null){
-						company.setJobCategory(jobCategory);
-					}
-					company.getAgents().add(custom);
-					company = companyRepo.save(company);
-					custom.setCompany(company);
-					custom = customUserRepo.save(custom);
+				custom.setName(naziv);
+				custom.setMaxDistance(Double.parseDouble(udaljenost));
+				JobCategory jobCategory = jobCategoryRepo.findByName(kategorija);
+				if(jobCategory != null){
+					System.out.println("Nasao kategoriju");
+					custom.setJobCategory(jobCategory);
 				}
+				custom = customUserRepo.save(custom);
+				System.out.println("Sacuvam customera");
+				jobCategory.getCompanies().add(custom);
+				System.out.println("Sacuvam kategoriju");
+				jobCategoryRepo.save(jobCategory);
 			}
 		}
 		
 		return valid;
 	}
-	
-	
-	//Da li vec postoji firma sa tim nazivom-ako postoji true
-	private boolean checkCompany(String name){
-		boolean exists = false;
-		List<Company> companies = companyRepo.findAll();
-		for(Company c : companies){
-			if(c.getName().equals(name)){
-				exists = true;
-				break;
-			}
-		}
-		return exists;
-	}
-
 }

@@ -2,8 +2,6 @@
  * Created by Jasmina on 23/02/2018.
  */
 
-var validator = new ToastrValidator();
-var formBuilder = new FormBuilder();
 var errorCounter = 0;
 
 //Link
@@ -62,7 +60,7 @@ function getFormForTask(id, zajdenicko, taskName){
                 
                 for(i=0; i<formDTO.formProperties.length; i++){
                     var formProperty = formDTO.formProperties[i];
-                    var $content = formBuilder.buildFormInput(formProperty, formDTO);
+                    var $content = globalFormBuilder.buildFormInput(formProperty, formDTO);
                     console.log($content);
                     $registerForm.append($content);
                 }
@@ -72,11 +70,11 @@ function getFormForTask(id, zajdenicko, taskName){
                 if(!zajdenicko && taskName != "Unos zajednickih podataka"){
                 	$registerForm.append("<p>Popunite neophodne podatke vezane za vašu firmu.</p>");
                 	getKategorije();
-                	var $button = formBuilder.buildFormButton("success", "registerAgentBtn", "Potvrdi");
+                	var $button = globalFormBuilder.buildFormButton("success", "registerAgentBtn", "Potvrdi");
                     $registerForm.append($button);
                     
                 }else {
-                	var $button = formBuilder.buildFormButton("success", "registerConfirmBtn", "Potvrdi");
+                	var $button = globalFormBuilder.buildFormButton("success", "registerConfirmBtn", "Potvrdi");
                     $registerForm.append($button);
                 }
                 

@@ -36,3 +36,15 @@
         left: 0;
     }
 }
+
+.ams-user-task-form{
+	border-radius: 3px;
+	border: 1px solid black;
+	background-color: #f9f7de
+}
+
+.ams-form-title{
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}

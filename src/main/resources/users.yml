@@ -6,10 +6,58 @@ password: pera
 groups:
  - id: pravno
 ---
+id: mika
+firstName: Mika
+lastName: Mikic
+email: canzona@localhost
+password: mika
+groups:
+ - id: pravno
+---
+id: lasta
+firstName: Lasta
+lastName: Lastic
+email: lasta@localhost
+password: lasta
+groups:
+ - id: pravno
+---
+id: arriva
+firstName: Janko
+lastName: Jankovic
+email: arriva@localhost
+password: arriva
+groups:
+ - id: pravno
+---
+id: nisekspres
+firstName: Nišlija
+lastName: Nišić
+email: nisekspres@localhost
+password: nisekspres
+groups:
+ - id: pravno
+---
+id: interkop
+firstName: John
+lastName: London
+email: nisekspres@localhost
+password: interkop
+groups:
+ - id: pravno
+---
 id: zika
 firstName: Zika
 lastName: Zikic
-email: zika@something.com
+email: jaca_023@hotmail.com
 password: zika
+groups:
+ - id: fizicko
+---
+id: test
+firstName: Test
+lastName: Test
+email: test@hotmail.com
+password: test
 groups:
  - id: fizicko

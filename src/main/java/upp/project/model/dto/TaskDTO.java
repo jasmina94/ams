@@ -1,5 +1,7 @@
 package upp.project.model.dto;
 
+import java.io.Serializable;
+
 import org.activiti.engine.task.Task;
 
 import lombok.Data;
@@ -7,7 +9,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TaskDTO {
+public class TaskDTO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2652455673961761613L;
 
 	private String id;
 	

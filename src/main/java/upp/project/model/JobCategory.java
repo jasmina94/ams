@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,9 +14,14 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class JobCategory {
+public class JobCategory implements Serializable{
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5679461157032563698L;
+
+	@Id
     @GeneratedValue
     private Long id;
 
@@ -22,5 +29,5 @@ public class JobCategory {
     private String name;
 
     @OneToMany(mappedBy = "jobCategory", cascade = CascadeType.ALL)
-    private List<Company> companies;
+    private List<CustomUser> companies;
 }
