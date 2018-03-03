@@ -4,7 +4,7 @@
 
 $(document).on("click", "#loginBtn", function(e) {
     if(!globalValidator.validateLoginForm()){
-        return;
+        return false;
     }
     e.preventDefault();
     var newUser = new Object();

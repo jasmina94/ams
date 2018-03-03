@@ -106,4 +106,10 @@ public class LocationServiceImpl implements LocationService{
 		  return deg * (Math.PI/180);
 	}
 
+	@Override
+	public Location getLocationForUser(String username) {
+		Location location = locationRepo.findByUser(username);
+		return location;
+	}
+
 }

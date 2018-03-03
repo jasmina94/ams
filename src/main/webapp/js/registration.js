@@ -34,7 +34,7 @@ function getTasks(isPravnoLice){
         		var task = tasks[0];
         		var id = task.id;
         		var taskName = task.name;
-        		getFormForTask(id, !isPravnoLice, taskName);
+        		getFormForTaskReg(id, !isPravnoLice, taskName);
         	}else{
         		alert("Proverite vašu email adresu. Poslat je mail za potvrdu registracije koju možete izvršiti u narednih 24h. (2min)");
         		errorCounter = 0;
@@ -46,7 +46,7 @@ function getTasks(isPravnoLice){
 	});
 }
 
-function getFormForTask(id, zajdenicko, taskName){
+function getFormForTaskReg(id, zajdenicko, taskName){
 	$.ajax({
 		url : '/api/registration/task/' + id,
         type : 'GET',

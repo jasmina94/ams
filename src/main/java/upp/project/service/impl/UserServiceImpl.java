@@ -39,8 +39,12 @@ public class UserServiceImpl implements UserService {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
 		List<User> users = identityService.createUserQuery().userId(username).list();
-		User user = users.get(0);
-        return new UserDTO(user);
+		if(users.size() != 0){
+			User user = users.get(0);
+			return new UserDTO(user);
+		}else {
+			return null;
+		}
 	}
 
 	@Override

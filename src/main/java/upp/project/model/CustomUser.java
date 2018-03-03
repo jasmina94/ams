@@ -74,4 +74,7 @@ public class CustomUser{
 	
 	@ManyToOne
 	private JobCategory jobCategory;
+	
+	@Column
+	private double ocena;
 }

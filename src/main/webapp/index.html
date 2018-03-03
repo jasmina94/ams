@@ -12,15 +12,15 @@
 
 	<script type="text/javascript" src="lib/jquery-3.2.1.js"></script>
 	<script type="text/javascript" src="lib/bootstrap.js"></script>
-	<script type="text/javascript" src="lib/toastr.js"></script>
 	<script type="text/javascript" src="lib/jquery-ui.js"></script>
+	<script type="text/javascript" src="lib/toastr.js"></script>
 	
     <!--Custom style-->
     <link rel="stylesheet" href="style/style.css">
 
     <!--Custom JS-->
-    <script src="js/app.js"></script>
     <script src="js/validation.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/login.js"></script>
     <script src="js/registration.js"></script>
     <script src="js/auction.js"></script>
@@ -65,7 +65,7 @@
         <p>Ovo je sistem za rad sa invertovanim aukcijama. Da biste nastavili sa radom prijavite se ili se registrujte.</p>
     </div>
     <div class="col-sm-5" style="padding-top: 2%; margin-left: 30%">
-        <form class="form-horizontal" id="loginForm">
+        <form class="form-horizontal" id="loginForm" onsubmit="return false">
             <fieldset>
                 <div class="form-group">
                     <label class="control-label col-sm-3">Korisničko ime:</label>
@@ -97,14 +97,119 @@
     
     <div id="divZahtevAukcija" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
     	<h5 class="ams-form-title"><b>Podnesite zahtev za nabavku robe ili usluge</b></h5>
-    	<form id="formaZahtevAukcija" class="form-horizontal">
+    	<form id="formaZahtevAukcija" class="form-horizontal" onsubmit="return false">
     	</form>
     </div>
     
     <div id="divOdlukaManjiBr" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
     	<h5 class="ams-form-title"><b>Ne postoji dovoljan broj firmi u sistemu za vaš zahtev.</b></h5>
-    	<form id="formaOdlukaManjiBr" class="form-horizontal">
+    	<form id="formaOdlukaManjiBr" class="form-horizontal" onsubmit="return false">
     	</form>
+    </div>
+    
+    <div id="divOdlukaOPonudiAgent" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Odluka o prihvatanju ponude koju ste dobili na mail.</b></h5>
+    	<form id="formaOdlukaOPonudiAgent" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divPopunjavanjePonudeAgent" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Popunjavanje ponude</b></h5>
+    	<form id="formaPopunjavanjePonudeAgent" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divUvidUStanjeAgent" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Uvid u stanje ponude</b></h5>
+    	<form id="formaUvidUStanjeAgent" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divPromenaPonudeAgent" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Izmena ponude</b></h5>    	
+    	<form id="formaPromenaPonudeAgent" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaProsiriFirme" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Da li želite da se zahtev proširi na još firmi?</b></h5>    	
+    	<form id="formaOdlukaProsiriFirme" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaNijednaPonuda" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Nema pristiglih ponuda za posao</b></h5>    	
+    	<form id="formaOdlukaNijednaPonuda"" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaProduziRok" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Produzenje roka za prikupljanje ponuda</b></h5>    	
+    	<form id="formaOdlukaProduziRok" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divPanelPonuda" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Prrikaz pristiglih ponuda</b></h5> 
+    	<p id="panelPonudaTaskId"></p>   	
+    	<div id="ponudeKontejner">
+    	</div>
+    	<p>Ako ne želite nijednu ponudu da odaberete od ponuđenih kliknite <a href="#" id="odbijaPonude">ovde</a></p>
+    </div>
+    
+    <div id="divOdlukaOOdustanku" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Odluka o odustanku</b></h5>    	
+    	<form id="formaOdlukaOOdustanku" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaDodatniInfo" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Dodatne informacije</b></h5>    	
+    	<form id="formaOdlukaDodatniInfo" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOdlukaPoslePojasnjenja" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Odluka o ponudi nakon pojasnjenja</b></h5>    	
+    	<form id="formaOdlukaPoslePojasnjenja" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divPrihvatanjePosla" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Prihvatanje posla</b></h5>    	
+    	<form id="formaPrihvatanjePosla" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOcenaKlijenta" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Ocenjivanje klijenta</b></h5>    	
+    	<form id="formaOcenaKlijenta" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="divOcenaAgenta" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<h5 class="ams-form-title"><b>Ocenjivanje agenta i potvrda o zavrsenom poslu</b></h5>    	
+    	<form id="formaOcenaAgenta" class="form-horizontal" onsubmit="return false">
+    	</form>
+    </div>
+    
+    <div id="panelPojasnjenje" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<div class="form-group">
+  			<label for="zahtevPojasnjenje">Unesite zahtev za pojasnjenje:</label>
+  			<textarea class="form-control" rows="5" id="zahtevPojasnjenje"></textarea>
+		</div>
+		<p id="potvrdiZahtevZaPojasnjenjeId"></p>
+		<button class="btn btn-success" id="potvrdiZahtevZaPojasnjenje">Potvrdi</button>
+    </div>
+    
+    <div id="panelPojasnjenjeOdgovor" class="col-sm-6 col-sm-offset-3 ams-user-task-form">
+    	<div class="form-group">
+  			<label for="zahtevPojasnjenjeOdg">Unesite odgovor na zahtev:</label>
+  			<textarea class="form-control" rows="5" id="zahtevPojasnjenjeOdg"></textarea>
+		</div>
+		<p id="prilozenZahtev"></p>
+		<p id="potvrdiZahtevZaPojasnjenjeOdgId"></p>
+		<button class="btn btn-success" id="potvrdiZahtevZaPojasnjenjeOdg">Potvrdi</button>
     </div>
 </div>
 

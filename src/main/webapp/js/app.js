@@ -1,30 +1,4 @@
-toastr.options = {
-    "closeButton" : true,
-    "debug" : false,
-    "newestOnTop" : false,
-    "progressBar" : false,
-    "positionClass" : "toast-top-right",
-    "preventDuplicates" : false,
-    "onclick" : null,
-    "showDuration" : "300",
-    "hideDuration" : "1000",
-    "timeOut" : "5000",
-    "extendedTimeOut" : "1000",
-    "showEasing" : "swing",
-    "hideEasing" : "linear",
-    "showMethod" : "fadeIn",
-    "hideMethod" : "fadeOut"
-}
-
-var globalAuthenticator = null;
-var globalFormBuilder = null;
-var globalValidator = null;
-
-$(document).ready(function(){
-	globalValidator = new ToastrValidator();
-	globalFormBuilder = new FormBuilder();
-	globalAuthenticator = new Authenticator();
-	
+$(document).ready(function(e){
 	checkIfLoged();
 });
 
@@ -34,7 +8,7 @@ function checkIfLoged(){
         type : 'GET',
         async: 'false',
         success : function(userDTO) {
-            if(userDTO != null){
+            if(userDTO != null && userDTO != ""){
             	globalAuthenticator.loggedInUser = userDTO;
             	var name = userDTO.firstname + " " + userDTO.lastname;
             	var $navbar = $(".mainNavbar").show();
@@ -245,10 +219,38 @@ function Authenticator(){
 		$("#loginForm").find("input").val("");
 		$("#mainDiv").hide();
 		$("#userLabel").text("");
+		location.reload();
 	}
 }
 
+function Storage(){
+	
+	this.ponuda = null;
+	this.mesto = null;
+}
 
+toastr.options = {
+		"closeButton" : true,
+		"debug" : false,
+		"newestOnTop" : false,
+		"progressBar" : false,
+		"positionClass" : "toast-top-right",
+		"preventDuplicates" : false,
+		"onclick" : null,
+		"showDuration" : "200",
+		"hideDuration" : "1000",
+		"timeOut" : "5000",
+		"extendedTimeOut" : "1000",
+		"showEasing" : "swing",
+		"hideEasing" : "linear",
+		"showMethod" : "fadeIn",
+		"hideMethod" : "fadeOut"
+}
+
+var globalAuthenticator = new Authenticator();
+var globalFormBuilder = new FormBuilder();
+var globalValidator = new ToastrValidator();
+var globalStorage = new Storage();
 
 
 

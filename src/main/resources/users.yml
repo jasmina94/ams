@@ -49,7 +49,7 @@ groups:
 id: zika
 firstName: Zika
 lastName: Zikic
-email: jaca_023@hotmail.com
+email: zika@localhost
 password: zika
 groups:
  - id: fizicko
@@ -57,7 +57,7 @@ groups:
 id: test
 firstName: Test
 lastName: Test
-email: test@hotmail.com
+email: test@localhost
 password: test
 groups:
  - id: fizicko
