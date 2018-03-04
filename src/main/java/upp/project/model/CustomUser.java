@@ -67,7 +67,7 @@ public class CustomUser{
 	private boolean isActive;
 	
 	@Column
-	private double maxDistance;
+	private double maxDistance = 0.0;
 	
 	@Column
 	private String name;
@@ -76,5 +76,5 @@ public class CustomUser{
 	private JobCategory jobCategory;
 	
 	@Column
-	private double ocena;
+	private double ocena = 0.0;
 }

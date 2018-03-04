@@ -11,6 +11,20 @@ import upp.project.model.dto.TenderDTO;
 
 public class DateConverter {
 
+	public static Date formatDate(String dateToFormat){
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		try{
+			Date novi = formatter.parse(dateToFormat);
+			c.setTime(novi);
+			c.add(Calendar.HOUR, -1);
+			return novi;
+		}catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public static RequestDTO changeRequestDates(RequestDTO requestDTO){
 		Calendar c = Calendar.getInstance(); 
 		c.setTime(requestDTO.getRokZaPonude()); 

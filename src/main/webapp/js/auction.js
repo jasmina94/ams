@@ -216,7 +216,7 @@ function getFormForTask(id, taskName){
         			prikaziFormuUnosNovogDatuma(taskId, formProperties, formDTO);
         		}else if(taskName == "Odluka o odustanku"){
         			prikaziFormuOdlukaOOdustanku(taskId, formProperties, formDTO);
-        		}else if(taskName == "Dodatne informacje"){
+        		}else if(taskName == "Dodatne informacije"){
         			prikaziFormuOdlukaODodatnimInformacijama(taskId, formProperties, formDTO);
         		}else if(taskName == "Uvid u pojasnjenje i odluka"){
         			prikaziFormuOdlukaPoslePojasnjenja(taskId, formProperties, formDTO);
@@ -228,7 +228,7 @@ function getFormForTask(id, taskName){
         			prikaziFormuZaOcenuAgenta(taskId, formProperties, formDTO);
         		}
         	}else{
-        		if(taskName == "Zahtev za pojašnjenje"){
+        		if(taskName == "Zahtev za pojasnjenje"){
         			panelPojasnjenje(taskId);
         		}else if(taskName == "Pojasnjenje"){
         			prikazZahtevaZaPojasnjenjeIUnos(taskId);
@@ -429,17 +429,16 @@ function prikaziFormuUnosNovogDatuma(taskId, formProperties, form){
 
 //Prikaz panela sa ponudama
 function prikaziPanelSaPonudama(taskId){
-	$(".ams-user-task-form").hide();
-	var $div = $("#divPanelPonuda").show();
-	$div.empty();
-	var $kont = $("#ponudeKontejner");
-	$kont.empty();
-	$("#panelPonudaTaskId").text(taskId);
+	console.log("Prikaz panela sa ponudama: " + taskId);
 	$.ajax({
 		url: 'auction/dobaviPonude/' + taskId,
 		type: 'GET',
 		async: false,
 		success: function(ponude){
+			$(".ams-user-task-form").hide();
+			var $div = $("#divPanelPonuda").show();
+			var $kont = $("#ponudeKontejner").empty();
+			$("#panelPonudaTaskId").text(taskId);
 			if(ponude.length != 0){
 				for(var i=0; i<ponude.length; i++){
 					var ponuda = ponude[i];
@@ -451,11 +450,16 @@ function prikaziPanelSaPonudama(taskId){
 			    				 "<p>Rok izvršenja: '" + formatDatum + "'</p>" + 
 			    				 "<p>Cena: '" + cena + "' </p>" +
 			    				 "<p>Agent: '" + agent + "' </p> " +
-			    				 "<p class='odabirPonude' id='" + agent + "'>"+
-			    				 "</div>");
+			    				 "<p><a class='odabirPonude' id='" + agent + "'>Odaberi ponudu</a></p>"+
+			    				 "</div>"+
+			    				 "<hr stle='borderd-color:black'>");
 				}
+				return true;
 			}else {
 				console.log("nema ponuda");
+				var $kont = $("#ponudeKontejner").empty();
+				$kont.append("<p>Nema ponuda!Greska</p>");
+				return false;
 			}			
 		},
 		error : function(xhr, textStatus, errorThrown) {
@@ -622,14 +626,15 @@ $(document).on("click", "#potvrdiZahtevZaPojasnjenje", function(){
 	var params = {};
 	params["zahtevPojasnjenje"] = $("textarea#zahtevPojasnjenje").val();
 	var taskId = $("#potvrdiZahtevZaPojasnjenjeId").text();
+	var data = JSON.stringify(params);
 	$.ajax({
 		url: '/auction/zahtev/' + taskId,
 		type: 'POST',
-		data: JSON.stringify(params),
+		data: data,
+		contentType: "application/json",
 		async: false,
 		success: function(msg){
 			console.log(msg);
-			trazi
 		},
 		error : function(xhr, textStatus, errorThrown) {
 	        toastr.error('Error!  Status = ' + xhr.status);
@@ -662,6 +667,7 @@ $(document).on("click", "#potvrdiZahtevZaPojasnjenjeOdg", function(){
 		url: '/auction/pojasnjenje/' + taskId,
 		type: 'POST',
 		data: JSON.stringify(params),
+		contentType: "application/json",
 		async: false,
 		success: function(msg){
 			console.log(msg);

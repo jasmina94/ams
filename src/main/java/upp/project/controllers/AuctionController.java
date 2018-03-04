@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -119,9 +120,9 @@ public class AuctionController {
 		TaskFormData taskFormData = formService.getTaskFormData(id);
 		List<FormProperty> formProperties = taskFormData.getFormProperties();
 		if (formProperties.size() == 0){
-			taskService.complete(id);
+//			taskService.complete(id); //samo jedan task nema formu ne smes da ga prekines
 			formDTO.setMessage(Messages.SUCCESSFUL_TASK);
-			System.out.println("Zavrsio je task");
+			System.out.println("Dobio task bez forme");
 		}else {
 			formDTO.setFormKey(taskFormData.getFormKey());
 			formDTO.setFormProperties(formProperties);
@@ -167,7 +168,7 @@ public class AuctionController {
 		
 		TaskFormData formData = formService.getTaskFormData(taskId); //za validaciju ostavi		
 		boolean valid = Validator.validateForm(formData, params);   //genericka validacija forme
-		
+		boolean submitForm = true;
 		UserDTO logovani = userService.read();
 		String userId = logovani.getUsername();
 		if(canExecute(taskId, userId) && valid){
@@ -191,10 +192,20 @@ public class AuctionController {
 				String valueDate = params.get("noviRokZaPonude");
 				zahtev = DateConverter.changeDate(zahtev, valueDate);
 				runtimeService.setVariable(execId, "zahtev", zahtev);
+			}else if(params.containsKey("terminPocetkaRadova")){
+				String execId = taskService.createTaskQuery().taskId(taskId).singleResult().getProcessInstanceId();
+				String pocetakRadovaStr = params.get("terminPocetkaRadova");
+				Date pocetakRadovaDat = DateConverter.formatDate(pocetakRadovaStr);
+				runtimeService.setVariable(execId, "terminPocetkaRadova", pocetakRadovaDat);
+				submitForm = false;
+				message = "ok";
 			}else {
 				message = "ok";
 			}
-			formService.submitTaskFormData(taskId, params);
+			
+			if(submitForm){
+				formService.submitTaskFormData(taskId, params);
+			}
 		}else{
 			message = "fail";
 		}
@@ -262,6 +273,16 @@ public class AuctionController {
 		}
 		
 		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@GetMapping(value="/dobaviPonude/{taskId}")
+	public ResponseEntity<List<TenderDTO>> getSvePonude(@PathVariable String taskId){
+		Task task= taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processId = task.getProcessInstanceId();
+		HashMap<String, Object> variables=(HashMap<String, Object>) runtimeService.getVariables(processId);
+		List<TenderDTO> ponude = (List<TenderDTO>) variables.get("ponude");
+		return new ResponseEntity<List<TenderDTO>>(ponude, HttpStatus.OK);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -338,13 +359,6 @@ public class AuctionController {
 		}else {
 			message = "fail";
 		}
-		return new ResponseEntity<String>(message, HttpStatus.OK);
-	}
-	
-	@PostMapping(value="/odabirPonude/{taskId}")
-	public ResponseEntity<String> odabirPonude(@PathVariable String taskId, @RequestBody Map<String, String> params, HttpServletRequest request){
-		String message = "";
-		
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 	
@@ -439,7 +453,7 @@ public class AuctionController {
 		List<CustomUser> users = customUserRepo.findAll();
 		for(CustomUser c : users){
 			if(c.getUsername().equals(idPonude)){
-				odabraniAgent = new CustomUserDTO(c, true);
+				odabraniAgent = new CustomUserDTO(c, false);
 				break;
 			}
 		}

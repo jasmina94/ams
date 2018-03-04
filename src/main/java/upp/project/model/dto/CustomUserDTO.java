@@ -25,10 +25,10 @@ public class CustomUserDTO implements Serializable{
 	private String ptt;
 	private String tip;
 	private boolean isActive;
-	private double maxDistance;
+	private double maxDistance = 0.0;
 	private String name;
 	private JobCategoryDTO jobCategory;
-	private double ocena;
+	private double ocena = 0.0;
 	
 	
 	public CustomUserDTO(CustomUser customUser){
@@ -46,10 +46,9 @@ public class CustomUserDTO implements Serializable{
 		this.ptt = customUser.getPtt();
 		this.adresa = customUser.getAdresa();
 		this.tip = customUser.getTip().name();
-		this.maxDistance = customUser.getMaxDistance();
-		this.name  = customUser.getName();
 		this.isActive = customUser.isActive();
 		this.ocena = customUser.getOcena();
+		this.maxDistance = customUser.getMaxDistance();
 		if(customUser.getJobCategory() != null){
 			this.jobCategory = new JobCategoryDTO(customUser.getJobCategory(), false);
 		}
