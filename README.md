@@ -1,4 +1,5 @@
 # ams
-# ams
-Projekat iz predemte Upravljanje poslovnim procesima 
-Studijski program master - Elektronsko poslovanje
+## Auction management system
+Projekat iz predmeta Upravljanje poslovnim procesima na smeru Elektronsko poslovanje master studija
+
+Godina 2017-2018
